@@ -27,3 +27,59 @@ Folder layout (initial):
 - Makefile
 
 Security: do NOT commit real tokens. Use .env files (gitignored).
+
+---
+
+## Быстрый старт (dev) ✅
+
+1. Скопируйте пример переменных окружения и заполните значения:
+
+```bash
+cp .env.example .env.dev
+# или вручную создайте .env.dev
+```
+
+2. Запустите окружение в Docker:
+
+```bash
+docker compose -f docker-compose.dev.yml up --build -d
+```
+
+3. Проверка:
+- Логи бота: `docker compose -f docker-compose.dev.yml logs -f bot`
+- Выполните `get_me` внутри контейнера или отправьте сообщение своему боту в Telegram.
+
+---
+
+## Миграции Alembic 🔧
+
+- Применить миграции локально/в контейнере:
+
+```bash
+alembic upgrade head
+```
+
+- Команды для разработки есть в `Makefile` (см. `make help`).
+
+---
+
+## Тесты и CI 🧪
+
+- Локально запустить тесты с покрытием:
+
+```bash
+pytest --cov=app --cov-report=term-missing -q
+```
+
+- В репозитории настроен Github Actions для запуска `ruff`, `mypy` и `pytest` с проверкой покрытия (80%).
+
+---
+
+## Вклад и PRs 🤝
+
+- Создавайте небольшие логические PR (feature/tests/docs).
+- В PR добавьте описание, список проверок (миграции/тесты/линтер).
+
+---
+
+Если нужно — могу автоматически подготовить PR с этими изменениями (пока локально закоммичу изменения и создам ветку).

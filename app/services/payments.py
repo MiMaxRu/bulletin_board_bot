@@ -31,6 +31,28 @@ class MockProvider:
         return self._store.get(payment_id, False)
 
 
+class YooKassaProvider:
+    """Simple async YooKassa-like provider skeleton supporting sandbox mode.
+    This implementation is sandbox-only and does not call real YooKassa APIs unless
+    configuration is provided. It can be extended to perform real HTTP requests.
+    """
+
+    def __init__(self, token: str | None = None, sandbox: bool = True):
+        self.token = token
+        self.sandbox = sandbox
+        self._store: dict[str, bool] = {}
+
+    async def create_payment(self, amount: int, description: str) -> str:
+        # In sandbox mode we simulate creating a payment and returning an id
+        pid = f"yoo_{len(self._store) + 1}"
+        self._store[pid] = False
+        return pid
+
+    async def verify_payment(self, payment_id: str) -> bool:
+        # Simulate verification; in real provider make HTTP call
+        return self._store.get(payment_id, False)
+
+
 _provider: PaymentProvider | None = None
 
 
@@ -39,6 +61,10 @@ def get_provider() -> PaymentProvider:
     if _provider is None:
         if settings.payment_provider == "mock":
             _provider = MockProvider()
+        elif settings.payment_provider == "yookassa":
+            # use token from env if provided; sandbox by default
+            token = None
+            _provider = YooKassaProvider(token=token, sandbox=True)
         else:
             _provider = MockProvider()  # default fallback
     return _provider

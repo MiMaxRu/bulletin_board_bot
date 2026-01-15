@@ -8,6 +8,7 @@ from app.core.config import load_settings
 from app.db.session import async_session
 from app.db.repository import get_pending_ads
 from app.services.moderation import approve_ad, reject_ad
+from loguru import logger
 
 settings = load_settings()
 
@@ -104,7 +105,12 @@ async def admin_text_handler(message: types.Message):
         return
 
 async def start_polling():
-    await dp.start_polling(bot)
+    logger.info("Admin bot starting polling...")
+    try:
+        await dp.start_polling(bot)
+    except Exception:
+        logger.exception("Admin bot polling stopped unexpectedly")
+        raise
 
 if __name__ == "__main__":
     asyncio.run(start_polling())

@@ -10,6 +10,7 @@ from app.core.config import load_settings
 from app.db.session import async_session
 from app.services.users import ensure_user
 from app.services.ads import create_ad_for_user
+from loguru import logger
 
 settings = load_settings()
 
@@ -134,7 +135,12 @@ async def enter_title(message: types.Message, state: FSMContext):
             await state.clear()
 
 async def start_polling():
-    await dp.start_polling(bot)
+    logger.info("Client bot starting polling...")
+    try:
+        await dp.start_polling(bot)
+    except Exception:
+        logger.exception("Client bot polling stopped unexpectedly")
+        raise
 
 if __name__ == "__main__":
     asyncio.run(start_polling())
