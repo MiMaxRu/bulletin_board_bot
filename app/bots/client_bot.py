@@ -13,7 +13,15 @@ from app.services.ads import create_ad_for_user
 
 settings = load_settings()
 
-bot = Bot(token=settings.telegram_token_client)
+# lazy-safe bot creation (avoid token validation errors in tests)
+if settings.telegram_token_client:
+    bot = Bot(token=settings.telegram_token_client)
+else:
+    class _DummyBot:
+        async def send_message(self, *args, **kwargs):
+            return None
+    bot = _DummyBot()
+
 dp = Dispatcher()
 
 
@@ -91,6 +99,9 @@ async def enter_title(message: types.Message, state: FSMContext):
                     email=data.get("email"),
                     link=data.get("link"),
                 )
+                # notify admins about new ad
+                from app.services.moderation import notify_admins
+                await notify_admins(session, ad)
             await message.answer("Ad submitted for moderation.")
             await state.clear()
         else:

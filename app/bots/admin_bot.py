@@ -11,7 +11,15 @@ from app.services.moderation import approve_ad, reject_ad
 
 settings = load_settings()
 
-bot = Bot(token=settings.telegram_token_admin)
+# lazy-safe bot creation (avoid token validation errors in tests)
+if settings.telegram_token_admin:
+    bot = Bot(token=settings.telegram_token_admin)
+else:
+    class _DummyBot:
+        async def send_message(self, *args, **kwargs):
+            return None
+    bot = _DummyBot()
+
 dp = Dispatcher()
 
 
