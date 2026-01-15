@@ -22,6 +22,9 @@ class Ad(Base):
     description = Column(Text, nullable=False)
     author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     status = Column(String(32), default="pending")
+    phone = Column(String(64), nullable=True)
+    email = Column(String(255), nullable=True)
+    link = Column(String(1024), nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     author = relationship("User")

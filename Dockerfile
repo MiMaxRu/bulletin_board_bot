@@ -4,8 +4,9 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y gcc libpq-dev && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml poetry.lock* /app/
-RUN pip install --upgrade pip && pip install poetry && poetry config virtualenvs.create false && poetry install --no-dev
+# Use pip to install minimal runtime dependencies for faster, simpler builds
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /app
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from aiogram import Bot, Dispatcher, types
+from aiogram.filters import Command
 from app.core.config import load_settings
 
 settings = load_settings()
@@ -9,7 +10,7 @@ settings = load_settings()
 bot = Bot(token=settings.telegram_token_admin)
 dp = Dispatcher()
 
-@dp.message("/start")
+@dp.message(Command(commands=["start"]))
 async def cmd_start(message: types.Message):
     await message.answer("Hello! This is the admin bot (skeleton).")
 
