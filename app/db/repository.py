@@ -48,6 +48,18 @@ async def set_ad_status(session: AsyncSession, ad_id: int, status: str) -> Optio
     return await get_ad_by_id(session, ad_id)
 
 
+async def set_ad_payment(session: AsyncSession, ad_id: int, price: int, payment_id: str) -> Optional[Ad]:
+    await session.execute(update(Ad).where(Ad.id == ad_id).values(price=price, payment_id=payment_id, status="awaiting_payment"))
+    await session.commit()
+    return await get_ad_by_id(session, ad_id)
+
+
+async def mark_ad_paid(session: AsyncSession, ad_id: int) -> Optional[Ad]:
+    await session.execute(update(Ad).where(Ad.id == ad_id).values(is_paid=True, status="pending"))
+    await session.commit()
+    return await get_ad_by_id(session, ad_id)
+
+
 async def get_admins(session: AsyncSession) -> List[User]:
     q = await session.execute(select(User).where(User.is_admin == True))
     return q.scalars().all()

@@ -26,6 +26,12 @@ class Ad(Base):
     phone = Column(String(64), nullable=True)
     email = Column(String(255), nullable=True)
     link = Column(String(1024), nullable=True)
+
+    # payment-related fields
+    price = Column(Integer, nullable=True)
+    is_paid = Column(Boolean, default=False)
+    payment_id = Column(String(255), nullable=True)
+
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     author = relationship("User")

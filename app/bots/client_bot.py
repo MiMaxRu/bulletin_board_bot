@@ -54,6 +54,20 @@ async def cmd_create(message: types.Message, state: FSMContext):
 
 @dp.message()
 async def enter_title(message: types.Message, state: FSMContext):
+    # quick pay confirm command handler inside client bot
+    if message.text.startswith("/pay_confirm"):
+        parts = message.text.split()
+        if len(parts) < 2:
+            await message.answer("Usage: /pay_confirm <ad_id>")
+            return
+        ad_id = int(parts[1])
+        from app.services.payments import verify_and_mark
+        ok = await verify_and_mark(ad_id)
+        if ok:
+            await message.answer("Payment confirmed, ad sent for moderation.")
+        else:
+            await message.answer("Payment not found or verification failed.")
+        return
     state_name = await state.get_state()
     if state_name == AdStates.title:
         await state.update_data(title=message.text)
@@ -99,10 +113,21 @@ async def enter_title(message: types.Message, state: FSMContext):
                     email=data.get("email"),
                     link=data.get("link"),
                 )
-                # notify admins about new ad
-                from app.services.moderation import notify_admins
-                await notify_admins(session, ad)
-            await message.answer("Ad submitted for moderation.")
+                # monetization flow
+                from app.core.config import load_settings
+                s = load_settings()
+                if s.monetization_enabled and int(s.price_per_post) > 0:
+                    from app.services.payments import create_payment_for_ad, get_provider
+                    price = int(s.price_per_post)
+                    pid = await create_payment_for_ad(session, ad.id, price=price)
+                    # send payment instructions (mock)
+                    provider = get_provider()
+                    await message.answer(f"Payment required: {price}. Payment id: {pid}. After payment run /pay_confirm {ad.id}")
+                else:
+                    # notify admins about new ad
+                    from app.services.moderation import notify_admins
+                    await notify_admins(session, ad)
+                    await message.answer("Ad submitted for moderation.")
             await state.clear()
         else:
             await message.answer("Cancelled.")

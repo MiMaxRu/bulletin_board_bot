@@ -1,4 +1,4 @@
-.PHONY: run-dev run-prod run-test build
+.PHONY: run-dev run-prod run-test build migrate alembic-revision
 
 run-dev:
 	docker compose -f docker-compose.dev.yml up --build
@@ -11,3 +11,9 @@ run-test:
 
 build:
 	docker build -t bulletin_board_bot:latest .
+
+migrate:
+	alembic upgrade head
+
+alembic-revision:
+	alembic revision --autogenerate -m "add migration"

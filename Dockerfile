@@ -10,6 +10,11 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /app
 
+# copy entrypoint script and make executable
+COPY scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 ENV PYTHONUNBUFFERED=1
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["python", "-m", "app.main"]

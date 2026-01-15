@@ -1,0 +1,7 @@
+site_name: Bulletin Board Bot
+nav:
+  - Home: index.md
+  - Setup: setup.md
+  - Running: running.md
+  - Migrations: migrations.md
+  - Payments: payments.md
