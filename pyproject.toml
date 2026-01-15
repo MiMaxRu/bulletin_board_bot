@@ -1,0 +1,9 @@
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W", "C90", "TC", "ANN"]
+ignore = ["E203", "W503"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false  # will enable strict later; initial skeleton keeps it relaxed
+ignore_missing_imports = true

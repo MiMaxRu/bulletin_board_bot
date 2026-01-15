@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+.env
+
+# pyenv
+.python-version
+
+# distributions
+build/
+dist/
+*.egg-info/
+
+# Docker
+*.log
+**/docker-compose.override.yml
+
+# Editor
+.vscode/
+.idea/
+*.swp
