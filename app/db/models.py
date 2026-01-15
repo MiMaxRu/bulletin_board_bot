@@ -12,6 +12,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     tg_id = Column(Integer, unique=True, nullable=False, index=True)
     is_admin = Column(Boolean, default=False)
+    is_banned = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 class Ad(Base):

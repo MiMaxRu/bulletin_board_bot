@@ -51,3 +51,9 @@ async def set_ad_status(session: AsyncSession, ad_id: int, status: str) -> Optio
 async def get_admins(session: AsyncSession) -> List[User]:
     q = await session.execute(select(User).where(User.is_admin == True))
     return q.scalars().all()
+
+
+async def set_user_banned(session: AsyncSession, user_id: int, banned: bool) -> Optional[User]:
+    await session.execute(update(User).where(User.id == user_id).values(is_banned=banned))
+    await session.commit()
+    return await get_user_by_id(session, user_id)
