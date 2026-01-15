@@ -1,10 +1,20 @@
-"""Клиентский бот — scaffold (позже: aiogram handlers, FSM)."""
+from __future__ import annotations
 
-from typing import Any
+import asyncio
+from aiogram import Bot, Dispatcher, types
+from app.core.config import load_settings
 
+settings = load_settings()
 
-async def start_client_bot(token: str | None = None) -> Any:
-    # stub: реальная инициализация aiogram добавится на этапе 2
-    if not token:
-        return None
-    return True
+bot = Bot(token=settings.telegram_token_client)
+dp = Dispatcher()
+
+@dp.message("/start")
+async def cmd_start(message: types.Message):
+    await message.answer("Hello! This is the client bot (skeleton).")
+
+async def start_polling():
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(start_polling())

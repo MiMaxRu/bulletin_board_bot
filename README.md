@@ -1,23 +1,29 @@
-# Bulletin Board Bot (skeleton)
+# Bulletin Board Bot (aiogram)
 
-Проект: Асинхронный сервис доски объявлений с ботами (aiogram).
+Production-ready async bulletin-board service with two Telegram bots (client + admin).
 
-Цель этого PR — создать skeleton проекта, CI, Docker и запустить минимальный контейнер с healthcheck.
+Quick start (dev):
 
-Основное:
-- Python 3.11+
-- aiogram 3.x
-- SQLAlchemy async + asyncpg
-- Alembic
-- Docker Compose (dev/test/prod)
-- loguru
-- pytest + pytest-asyncio
-- mypy (strict) + ruff
-- MkDocs для документации
+1. Copy .env.example to .env.dev and fill in tokens and DB settings.
+2. Run: make run-dev
 
-Запуск локально (dev):
+Folder layout (initial):
+- app/
+  - bots/
+    - client_bot.py
+    - admin_bot.py
+  - core/
+    - config.py
+    - logging.py
+  - db/
+    - session.py
+    - models.py
+  - main.py
+- alembic/
+- tests/
+- Dockerfile
+- docker-compose.yml
+- docker-compose.dev.yml
+- Makefile
 
-1. Скопировать `.env.example` -> `.env` и заполнить переменные
-2. make run-dev
-
-Важно: не коммитить реальные токены/секреты — храните их в `.env` и в секретах CI.
+Security: do NOT commit real tokens. Use .env files (gitignored).

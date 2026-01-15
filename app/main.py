@@ -1,8 +1,14 @@
-from fastapi import FastAPI
+from __future__ import annotations
 
-app = FastAPI(title="Bulletin Board Bot - health")
+import asyncio
+from app.core.logging import setup_logging
+from app.bots import client_bot, admin_bot
 
+setup_logging()
 
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+async def main():
+    # start both bots in same event loop
+    await asyncio.gather(client_bot.start_polling(), admin_bot.start_polling())
+
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -1,5 +1,5 @@
 from loguru import logger
 
-
-def configure_logging() -> None:
-    logger.add("-", level="INFO")
+def setup_logging():
+    logger.remove()
+    logger.add("/dev/stdout", level="INFO")

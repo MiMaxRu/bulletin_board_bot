@@ -1,24 +1,25 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.11]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install
-        run: python -m pip install -r requirements.txt
-      - name: Lint (ruff)
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install ruff mypy pytest
+      - name: Ruff
         run: ruff check .
-      - name: Typecheck (mypy)
+      - name: Mypy
         run: mypy .
-      - name: Tests (pytest)
+      - name: Pytest
         run: pytest -q

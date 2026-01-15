@@ -3,22 +3,18 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-venv/
 .env
+.env.*
 
-# pyenv
-.python-version
+# Byte-compiled / optimized / DLL files
+*.so
 
-# distributions
-build/
-dist/
-*.egg-info/
+# Virtualenv
+venv/
 
 # Docker
-*.log
-**/docker-compose.override.yml
+docker-compose.override.yml
 
 # Editor
 .vscode/
 .idea/
-*.swp
